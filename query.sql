@@ -46,6 +46,13 @@ SELECT Jobs.id AS `Jobs__id`,
          JobTypes.modified AS `JobTypes__modified`,
          JobTypes.deleted AS `JobTypes__deleted`
 FROM jobs Jobs
+/* do inner join 1st to get common record between tables*/
+INNER JOIN job_categories JobCategories
+    ON (JobCategories.id = (Jobs.job_category_id) 
+        AND (JobCategories.deleted) IS NULL)
+INNER JOIN job_types JobTypes
+    ON (JobTypes.id = (Jobs.job_type_id)
+        AND (JobTypes.deleted) IS NULL)
 LEFT JOIN jobs_personalities JobsPersonalities
     ON Jobs.id = (JobsPersonalities.job_id)
 LEFT JOIN personalities Personalities
@@ -85,12 +92,6 @@ LEFT JOIN affiliates ReqQualifications
     ON (ReqQualifications.type = 2
         AND ReqQualifications.id = (JobsReqQualifications.affiliate_id)
         AND (ReqQualifications.deleted) IS NULL)
-INNER JOIN job_categories JobCategories
-    ON (JobCategories.id = (Jobs.job_category_id)
-        AND (JobCategories.deleted) IS NULL)
-INNER JOIN job_types JobTypes
-    ON (JobTypes.id = (Jobs.job_type_id)
-        AND (JobTypes.deleted) IS NULL)
 WHERE ((JobCategories.name LIKE '%キャビンアテンダント%'
         OR JobTypes.name LIKE '%キャビンアテンダント%'
         OR Jobs.name LIKE '%キャビンアテンダント%'
